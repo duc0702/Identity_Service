@@ -10,6 +10,7 @@ import com.example.indentity_service.exception.ErrorCode;
 import com.example.indentity_service.mapper.UserMapper;
 import com.example.indentity_service.repository.RoleRepository;
 import com.example.indentity_service.repository.UserRepository;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -52,6 +53,7 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
+        System.out.println("✅ User đã được xác thực và có quyền ADMIN");
         return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse)
                 .collect(Collectors.toList());
@@ -92,4 +94,5 @@ public class UserService {
         User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return userMapper.toUserResponse(user);
     }
+
 }

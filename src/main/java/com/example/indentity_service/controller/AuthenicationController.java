@@ -3,15 +3,15 @@ package com.example.indentity_service.controller;
 import com.example.indentity_service.dto.ApiResponse;
 import com.example.indentity_service.dto.request.AuthenicationRequest;
 import com.example.indentity_service.dto.request.IntrospectRequest;
+import com.example.indentity_service.dto.request.LogoutRequest;
 import com.example.indentity_service.dto.response.AuthenicationResponse;
 import com.example.indentity_service.dto.response.IntrospectResponse;
-import com.example.indentity_service.service.AuthenicationService;
+import com.example.indentity_service.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClient;
 
 import java.text.ParseException;
 
@@ -20,7 +20,7 @@ import java.text.ParseException;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PACKAGE, makeFinal = true)
 public class AuthenicationController {
-     AuthenicationService authenicationService;
+     AuthenticationService authenicationService;
 
 
     @PostMapping("/token")
@@ -35,6 +35,12 @@ public class AuthenicationController {
         var result = authenicationService.introspectResponse(request);
         return ApiResponse.<IntrospectResponse>builder()
                 .data(result)
+                .build();
+    }
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenicationService.logout(request);
+        return ApiResponse.<Void>builder()
                 .build();
     }
 
