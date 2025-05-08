@@ -15,6 +15,7 @@ public interface UserMapper {
     @Mapping(target = "roles", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
+    @Mapping(target = "roles", ignore = true)
     User toUser(UserCreationRequest request);
     UserResponse toUserResponse(User user);
 

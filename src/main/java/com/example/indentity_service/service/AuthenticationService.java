@@ -3,6 +3,7 @@ package com.example.indentity_service.service;
 import com.example.indentity_service.dto.request.AuthenicationRequest;
 import com.example.indentity_service.dto.request.IntrospectRequest;
 import com.example.indentity_service.dto.request.LogoutRequest;
+import com.example.indentity_service.dto.request.RefreshRequest;
 import com.example.indentity_service.dto.response.AuthenicationResponse;
 import com.example.indentity_service.dto.response.IntrospectResponse;
 import com.example.indentity_service.entity.InvalidatedToken;
@@ -146,5 +147,22 @@ public class AuthenticationService {
        }
         return signedJWT;
 
+    }
+    public AuthenicationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signJWT = verifyToken(request.getToken());
+        var jit = signJWT.getJWTClaimsSet().getJWTID();
+        var expirationTime = signJWT.getJWTClaimsSet().getExpirationTime();
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryDate(expirationTime)
+                .build();
+        invalidatedRepository.save(invalidatedToken);
+        User user = userRepository.findByUsername(signJWT.getJWTClaimsSet().getSubject()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var token = generateToken(user);
+
+        return AuthenicationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
     }
 }

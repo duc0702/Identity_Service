@@ -28,7 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
     @Value("${jwt.signerKey}")
     private String SINGER_KEY;
-    private final String[] PUBLIC_ENDPOINTS = {"/users","/auth/token", "/auth/introspect" ,"/auth/logout"};
+    private final String[] PUBLIC_ENDPOINTS = {"/users","/auth/token", "/auth/introspect" ,"/auth/logout","/auth/refresh"};
     @Autowired
     CustomJwtDecoder customJwtDecoder;
     @Bean
